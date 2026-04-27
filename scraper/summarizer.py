@@ -2,18 +2,20 @@ import json
 import logging
 import re
 
-import google.generativeai as genai
+from google import genai
 
 
 def configure_gemini(api_key: str) -> None:
-    genai.configure(api_key=api_key)
+    global _client
+    _client = genai.Client(api_key=api_key)
+
+
+_client: genai.Client | None = None
 
 
 def summarize_articles(articles: list[dict]) -> list[dict]:
     if not articles:
         return articles
-
-    model = genai.GenerativeModel("gemini-1.5-flash")
 
     batch = [
         {
@@ -39,9 +41,11 @@ Articles:
 """
 
     try:
-        response = model.generate_content(prompt)
+        response = _client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+        )
         text = response.text.strip()
-        # Strip potential markdown code fences
         text = re.sub(r"^```(?:json)?\s*", "", text)
         text = re.sub(r"\s*```$", "", text)
         results = json.loads(text)
