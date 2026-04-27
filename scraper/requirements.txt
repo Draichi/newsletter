@@ -1,0 +1,8 @@
+requests==2.32.3
+beautifulsoup4==4.12.3
+feedparser==6.0.11
+google-generativeai==0.7.2
+supabase==2.5.0
+python-dateutil==2.9.0
+lxml==5.2.2
+cloudscraper==1.2.71
